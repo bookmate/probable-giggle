@@ -4,22 +4,16 @@ require 'support/fake_mysql_connection'
 
 class ProbableGiggle::LockTest < Minitest::Test
   def setup
-    ProbableGiggle::Configuration.connection = FakeMysqlConnection.new
-    ProbableGiggle::Configuration.logger = Logger.new('/dev/null')
-  end
-
-  def teardown
-    ProbableGiggle::Configuration.logger = nil
-    ProbableGiggle::Configuration.connection = nil
+    connection = FakeMysqlConnection.new
+    logger = Logger.new('/dev/null')
+    @lock = ProbableGiggle::Lock.new(name: 'lock1', connection: connection, logger: logger)
   end
 
   def test_obtain
-    lock = ProbableGiggle::Lock.new(name: 'lock1')
-    assert lock.obtain
+    assert @lock.obtain
   end
 
   def test_release
-    lock = ProbableGiggle::Lock.new(name: 'lock1')
-    assert lock.release
+    assert @lock.release
   end
 end
