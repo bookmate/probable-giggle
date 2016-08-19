@@ -32,7 +32,7 @@ module ProbableGiggle
     private
 
     def exec(fun)
-      query = "SELECT #{fun} AS result"
+      query = "SELECT #{fun} AS #{unique_column_name}"
       result = connection.select_value(query)
       logger.debug("Query: [#{query}]; Result: [#{result}]")
       1 == result
@@ -40,6 +40,11 @@ module ProbableGiggle
 
     def quoted_name
       @quoted_name ||= connection.quote(name)
+    end
+
+    # Prevent SQL-caching by AR
+    def unique_column_name
+      "t#{SecureRandom.hex}"
     end
   end
 end
