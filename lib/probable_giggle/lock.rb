@@ -6,11 +6,12 @@ module ProbableGiggle
     MAX_NAME_LENGTH = 64
     MAX_NAME_LENGTH_ERROR_MSG = "Lock name length must be less than " \
       "#{MAX_NAME_LENGTH} characters".freeze
+    DEFAULT_TIMEOUT = 0
 
     attr_reader :name, :timeout
     attr_reader :logger, :connection
 
-    def initialize(name:, timeout: 0, logger: Configuration.logger, connection: Configuration.connection)
+    def initialize(name:, timeout: DEFAULT_TIMEOUT, logger: Configuration.logger, connection: Configuration.connection)
       fail ArgumentError.new(MAX_NAME_LENGTH_ERROR_MSG) if name.length >= MAX_NAME_LENGTH
       @name = name
       @timeout = timeout
