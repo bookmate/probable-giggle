@@ -29,13 +29,26 @@ module ProbableGiggle
       exec("RELEASE_LOCK(#{quoted_name})")
     end
 
+    def obtained?
+      !is_used_lock.nil?
+    end
+
+    def is_used_lock
+      select("IS_USED_LOCK(#{quoted_name})")
+    end
+
     private
 
-    def exec(fun)
+    def select(fun)
       query = "SELECT #{fun} AS #{unique_column_name}"
       result = connection.select_value(query)
       logger.debug("Query: [#{query}]; Result: [#{result}]")
-      1 == result
+
+      result
+    end
+
+    def exec(fun)
+      1 == select(fun)
     end
 
     def quoted_name
