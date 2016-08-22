@@ -3,8 +3,8 @@ require 'probable_giggle/lock'
 module ProbableGiggle
   module Lockable
     def with_lock(name, timeout: Lock::DEFAULT_TIMEOUT)
-      lock = Lock.new(name: name, timeout: timeout)
-      if lock.obtain
+      lock = Lock.new(name: name)
+      if lock.obtain(timeout)
         yield
       else
         on_already_locked(lock)
