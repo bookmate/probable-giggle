@@ -81,7 +81,7 @@ module ProbableGiggle
 
     def select(fun)
       query = "SELECT #{fun} AS #{unique_column_name}"
-      connection.select_value(query).tap do |result|
+      prepared_connection.select_value(query).tap do |result|
         logger.debug("Query: [#{query}]; Result: [#{result}]")
       end
     end
@@ -92,12 +92,16 @@ module ProbableGiggle
     end
 
     def quoted_name
-      @quoted_name ||= connection.quote(name)
+      @quoted_name ||= prepared_connection.quote(name)
     end
 
     # Prevent SQL-caching by AR
     def unique_column_name
       "t#{SecureRandom.hex}"
+    end
+
+    def prepared_connection
+      @prepared_connection ||= connection.respond_to?(:call) ? connection.call : connection
     end
   end
 end
