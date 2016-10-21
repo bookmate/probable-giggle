@@ -9,13 +9,17 @@ module ProbableGiggle
     DEFAULT_TIMEOUT = 0
 
     attr_reader :name
-    attr_reader :logger, :connection
+    attr_reader :logger
 
     def initialize(name:, logger: Configuration.logger, connection: Configuration.connection)
       fail ArgumentError.new(MAX_NAME_LENGTH_ERROR_MSG) if name.length >= MAX_NAME_LENGTH
       @name = name
       @logger = logger
       @connection = connection
+    end
+
+    def connection
+      @connection.respond_to?(:call) ? @connection.call : @connection
     end
 
     def lock
