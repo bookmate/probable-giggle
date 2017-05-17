@@ -2,8 +2,6 @@ require 'probable_giggle/lock'
 
 module ProbableGiggle
   module Lockable
-    AlreadyLocked = Class.new(StandardError)
-
     def with_lock(name, timeout: Lock::DEFAULT_TIMEOUT)
       lock = Lock.new(name: name)
       if lock.obtain(timeout)
@@ -18,7 +16,7 @@ module ProbableGiggle
     private
 
     def on_already_locked(lock)
-      fail AlreadyLocked, "Could not obtain lock on [#{lock.name}]"
+      fail AlreadyLockedError, "Could not obtain lock on [#{lock.name}]"
     end
   end
 end
