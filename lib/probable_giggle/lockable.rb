@@ -16,7 +16,7 @@ module ProbableGiggle
     private
 
     def on_already_locked(lock)
-      lock.logger.debug("Resource [#{lock.name}] is already locked. Do nothing")
+      fail AlreadyLockedError, "Could not obtain lock on [#{lock.name}]"
     end
   end
 end
