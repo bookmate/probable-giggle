@@ -1,4 +1,3 @@
-
 class LockableClass
   include ProbableGiggle::Lockable
 

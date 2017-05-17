@@ -1,4 +1,5 @@
 require 'probable_giggle/configuration'
+require 'securerandom'
 
 module ProbableGiggle
   class Lock

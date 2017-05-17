@@ -1,5 +1,4 @@
 require 'test_helper'
-require 'securerandom'
 require 'probable_giggle/lock'
 require 'support/fake_mysql_connection'
 

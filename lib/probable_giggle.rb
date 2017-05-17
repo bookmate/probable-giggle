@@ -1,8 +1,7 @@
 module ProbableGiggle
   autoload :Lockable, 'probable_giggle/lockable'
-
-  ProbableGiggleError = Class.new(StandardError)
-  AlreadyLockedError = Class.new(ProbableGiggleError)
+  Error = Class.new(StandardError)
+  AlreadyLockedError = Class.new(Error)
 end
 
 require 'probable_giggle/configuration'
