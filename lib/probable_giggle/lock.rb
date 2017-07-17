@@ -7,7 +7,7 @@ module ProbableGiggle
     MAX_NAME_LENGTH = 64
     MAX_NAME_LENGTH_ERROR_MSG = "Lock name length must be less than " \
       "#{MAX_NAME_LENGTH} characters".freeze
-    DEFAULT_TIMEOUT = 0
+    DEFAULT_TIMEOUT = 5 # seconds
 
     attr_reader :name
     attr_reader :logger
