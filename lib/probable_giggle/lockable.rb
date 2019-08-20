@@ -4,13 +4,16 @@ module ProbableGiggle
   module Lockable
     def with_lock(name, timeout: Lock::DEFAULT_TIMEOUT)
       lock = Lock.new(name: name)
-      if lock.obtain(timeout)
-        yield
-      else
-        on_already_locked(lock)
+      obtained = false
+
+      begin
+        obtained = lock.obtain(timeout)
+        return yield if obtained
+      ensure
+        lock.release if obtained
       end
-    ensure
-      lock.release
+
+      on_already_locked(lock)
     end
 
     private
