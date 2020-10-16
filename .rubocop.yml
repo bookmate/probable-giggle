@@ -8,7 +8,7 @@ AllCops:
   Exclude:
     - 'vendor/**/*'
     - 'bin/*'
-  TargetRubyVersion: 2.6
+  TargetRubyVersion: 2.2
 
 # Layout
 Layout/BlockAlignment:
