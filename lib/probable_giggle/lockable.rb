@@ -2,8 +2,10 @@ require 'probable_giggle/lock'
 
 module ProbableGiggle
   module Lockable
-    def with_lock(name, timeout: Lock::DEFAULT_TIMEOUT)
-      lock = Lock.new(name: name)
+    DEFAULT_COMMENT = ''.freeze
+
+    def with_lock(name, comment: DEFAULT_COMMENT, timeout: Lock::DEFAULT_TIMEOUT)
+      lock = Lock.new(name: name, comment: comment)
       if lock.obtain(timeout)
         yield
       else
@@ -16,7 +18,7 @@ module ProbableGiggle
     private
 
     def on_already_locked(lock)
-      fail AlreadyLockedError, "Could not obtain lock on [#{lock.name}]"
+      raise AlreadyLockedError, "Could not obtain lock on [#{lock.name}]"
     end
   end
 end
