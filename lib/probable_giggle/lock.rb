@@ -3,7 +3,6 @@ require 'securerandom'
 
 module ProbableGiggle
   class Lock
-
     MAX_NAME_LENGTH = 64
     MAX_NAME_LENGTH_ERROR_MSG = "Lock name length must be less than " \
       "#{MAX_NAME_LENGTH} characters".freeze
@@ -12,11 +11,14 @@ module ProbableGiggle
     attr_reader :name
     attr_reader :logger
     attr_reader :connection
+    attr_reader :comment
 
-    def initialize(name:, logger: Configuration.logger, connection: Configuration.connection)
-      fail ArgumentError.new(MAX_NAME_LENGTH_ERROR_MSG) if name.length >= MAX_NAME_LENGTH
+    def initialize(name:, comment:, logger: Configuration.logger, connection: Configuration.connection)
+      raise ArgumentError.new(MAX_NAME_LENGTH_ERROR_MSG) if name.length >= MAX_NAME_LENGTH
+
       @name = name
       @logger = logger
+      @comment = comment
       @connection = connection.respond_to?(:call) ? connection.call : connection
     end
 
@@ -55,7 +57,7 @@ module ProbableGiggle
     end
 
     def unlock
-      fail "Resource [#{name}] wasn't locked by the current connection" unless release
+      raise "Resource [#{name}] wasn't locked by the current connection" unless release
     end
 
     def get_lock(timeout = DEFAULT_TIMEOUT)
@@ -82,7 +84,7 @@ module ProbableGiggle
     end
 
     def select(fun)
-      query = "SELECT #{fun} AS #{unique_column_name}"
+      query = "SELECT #{fun} AS #{unique_column_name} -- #{comment}"
       connection.select_value(query).tap do |result|
         logger.debug("Query: [#{query}]; Result: [#{result}]")
       end
@@ -90,7 +92,7 @@ module ProbableGiggle
 
     def exec(fun)
       result = select(fun)
-      1 == result
+      result == 1
     end
 
     def quoted_name

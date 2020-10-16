@@ -8,22 +8,30 @@ class ProbableGiggle::LockTest < Minitest::Test
   def setup
     @connection = FakeMysqlConnection.new
     @logger = Logger.new('/dev/null')
-    @lock = ProbableGiggle::Lock.new(name: 'lock1', connection: connection, logger: logger)
+    @lock = ProbableGiggle::Lock.new(name: 'lock1', comment: 'comment1', connection: connection, logger: logger)
   end
 
   def test_lock
     assert_equal(lock, lock.lock, 'Lock#lock grabs the lock and returns himself')
   end
 
+  def test_comment
+    assert_equal(
+      lock.comment,
+      'comment1',
+      'Lock#comment incapsulates an SQL comment'
+    )
+  end
+
   def test_locked_when_locked
     connection = FakeMysqlConnection.new(return_value: 68)
-    lock = ProbableGiggle::Lock.new(name: 'already_locked', connection: connection, logger: logger)
+    lock = ProbableGiggle::Lock.new(name: 'already_locked', comment: 'comment1', connection: connection, logger: logger)
     assert lock.locked?
   end
 
   def test_locked_when_unlocked
     connection = FakeMysqlConnection.new(return_value: nil)
-    lock = ProbableGiggle::Lock.new(name: 'already_locked', connection: connection, logger: logger)
+    lock = ProbableGiggle::Lock.new(name: 'already_locked', comment: 'comment1', connection: connection, logger: logger)
     refute lock.locked?
   end
 
