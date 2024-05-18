@@ -7,7 +7,7 @@ class ProbableGiggle::LockTest < Minitest::Test
 
   def setup
     @connection = FakeMysqlConnection.new
-    @logger = Logger.new('/dev/null')
+    @logger = ->(message) { }
     @lock = ProbableGiggle::Lock.new(name: 'lock1', comment: 'comment1', connection: connection, logger: logger)
   end
 

@@ -5,8 +5,8 @@ class FakeMysqlConnection
     @return_value = return_value
   end
 
-  def select_value(_query)
-    return_value
+  def select_rows(_query)
+    [return_value, 0, "localhost"]
   end
 
   def quote(str)

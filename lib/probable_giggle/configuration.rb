@@ -13,7 +13,7 @@ module ProbableGiggle
       private
 
       def default_logger
-        Logger.new(STDOUT).tap { |l| l.level = Logger::DEBUG }
+        ->(message) { puts(message) }
       end
     end
 

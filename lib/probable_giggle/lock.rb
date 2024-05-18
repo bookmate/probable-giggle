@@ -61,13 +61,13 @@ module ProbableGiggle
     end
 
     def get_lock(timeout = DEFAULT_TIMEOUT)
-      logger.debug("Obtain lock for resource [#{name}]")
+      logger.call("Obtain lock for resource [#{name}]")
       exec("GET_LOCK(#{quoted_name}, #{timeout})")
     end
     alias_method :obtain, :get_lock
 
     def release_lock
-      logger.debug("Obtain lock for resource [#{name}]")
+      logger.call("Release lock for resource [#{name}]")
       exec("RELEASE_LOCK(#{quoted_name})")
     end
     alias_method :release, :release_lock
@@ -84,10 +84,11 @@ module ProbableGiggle
     end
 
     def select(fun)
-      query = "SELECT #{fun} AS #{unique_column_name} -- #{comment}"
-      connection.select_value(query).tap do |result|
-        logger.debug("Query: [#{query}]; Result: [#{result}]")
-      end
+      query = "SELECT #{fun} AS #{unique_column_name}, CONNECTION_ID() AS conn_id, @@hostname AS hostname -- #{comment}"
+      result, connection_id, hostname = connection.select_rows(query).first
+      logger.call("Query: [#{query}]; Connection ID: [#{connection_id}]; Hostname: [#{hostname}]; Result: [#{result}]")
+
+      result
     end
 
     def exec(fun)

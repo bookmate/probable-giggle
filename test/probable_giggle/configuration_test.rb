@@ -8,7 +8,7 @@ class ProbableGiggle::ConfigurationTest < Minitest::Test
   end
 
   def test_logger
-    assert_kind_of(Logger, ProbableGiggle::Configuration.logger, 'Default logger is a logger')
+    assert_kind_of(Proc, ProbableGiggle::Configuration.logger, 'Default logger is a Proc')
     ProbableGiggle::Configuration.logger = :custom_logger
     assert_equal(:custom_logger, ProbableGiggle::Configuration.logger, 'Logger can be set to any value')
   end
