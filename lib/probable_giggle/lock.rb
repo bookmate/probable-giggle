@@ -85,7 +85,7 @@ module ProbableGiggle
 
     def select(fun)
       query = "SELECT #{fun} AS #{unique_column_name}, CONNECTION_ID() AS conn_id, @@hostname AS hostname -- #{comment}"
-      result, connection_id, hostname = connection.select_rows(query).first
+      result, connection_id, hostname = connection.execute(query).first
       logger.call("Query: [#{query}]; Connection ID: [#{connection_id}]; Hostname: [#{hostname}]; Result: [#{result}]")
 
       result
